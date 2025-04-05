@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Color Correction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .corrected-image {
+            margin-top: 20px;
+        }
+        .corrected-image img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Color Correction</h1>
+    <form th:action="@{/correct}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required/><br><br>
+        <label for="lut">Select LUT:</label>
+        <select name="lut" id="lut">
+            <option value="lut1">LUT 1</option>
+            <option value="lut2">LUT 2</option>
+            <option value="lut3">LUT 3</option>
+        </select><br><br>
+        <button type="submit">Correct Image</button>
+    </form>
+
+    <div class="corrected-image" th:if="${correctedImage}">
+        <h2>Corrected Image:</h2>
+        <img th:src="'data:image/png;base64,' + ${correctedImage}" />
+    </div>
+</div>
+</body>
+</html>
