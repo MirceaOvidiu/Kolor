@@ -32,11 +32,14 @@ public class indexController {
     public String correctImage(@RequestParam("image") MultipartFile image,
                                @RequestParam("lut") String lut,
                                Model model) throws IOException {
+        String apiHost = "127.0.0.1";
+        String apiPort = "5000";
+
         byte[] imageBytes = image.getBytes();
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
         Mono<String> response = webClient.post()
-                .uri("/color_correct/")
+                .uri("http://" + apiHost + ":" + apiPort + "/color_correct/")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData("file", image.getResource())
                         .with("lut_name", lut))
