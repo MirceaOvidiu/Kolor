@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Color Correction</title>
     <style>
@@ -67,8 +67,9 @@
     <h1>Color Correction</h1>
     <form th:action="@{/correct}" method="post" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required/><br><br>
-        <label for="lut">Select LUT:</label>
-        <select name="lut" id="lut">
+
+        <label for="lut_name">Select LUT:</label>
+        <select name="lut_name" id="lut_name">
             <option value="LUTs\Canon C-Log2 to Rec.709 LUT 33x33.cube">C-Log2</option>
             <option value="LUTs\Canon C-Log3 to Rec.709 LUT 33x33.cube">C-Log3</option>
             <option value="LUTs\DJI D-Log to Rec.709 LUT 33x33.cube">D-Log</option>
@@ -82,7 +83,7 @@
 
     <div class="corrected-image" th:if="${correctedImage}">
         <h2>Corrected Image:</h2>
-        <img th:src="'data:image/png;base64,' + ${correctedImage}" />
+        <img th:src="'data:image/jpeg;base64,' + ${correctedImage}"  alt=""/>
     </div>
 </div>
 </body>
