@@ -1,5 +1,8 @@
 package com.example.kolor_spring.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,13 +48,17 @@ public class indexController {
                 .retrieve()
                 .bodyToMono(String.class);
 
-        String correctedImageBytes = response.block();
+        String correctedImage64 = response.block();
 
-        // Decode the latin-1 encoded byte array to Base64
-        assert correctedImageBytes != null;
-        String base64Image = java.util.Base64.getEncoder().encodeToString(correctedImageBytes.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1));
-
-        model.addAttribute("correctedImage", "data:image/jpeg;base64," + base64Image);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(correctedImage64);
+            String correctedImageBase64 = rootNode.path("image").asText();
+            model.addAttribute("correctedImage", correctedImageBase64); // Directly pass the Base64 string
+        } catch (JsonProcessingException e) {
+            model.addAttribute("errorMessage", "Failed to process the corrected image.");
+            return "index";
+        }
         return "index";
     }
 }
