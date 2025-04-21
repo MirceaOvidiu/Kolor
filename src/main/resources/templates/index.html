@@ -49,9 +49,16 @@
             padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
+            margin: 5px;
         }
         button:hover {
             background-color: #0056b3;
+        }
+        .download-btn {
+            background-color: #28a745;
+        }
+        .download-btn:hover {
+            background-color: #218838;
         }
         .corrected-image {
             margin-top: 20px;
@@ -60,7 +67,38 @@
             max-width: 100%;
             border-radius: 8px;
         }
+        .error-message {
+            color: red;
+            margin-top: 20px;
+        }
+        .debug-info {
+            color: blue;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .image-actions {
+            margin-top: 15px;
+        }
     </style>
+    <script>
+        function downloadImage() {
+            // Get the image source (data URL)
+            const imgElement = document.getElementById('correctedImg');
+            const imageUrl = imgElement.src;
+
+            // Create a temporary anchor element
+            const downloadLink = document.createElement('a');
+            downloadLink.href = imageUrl;
+
+            // Set the download attribute with a filename
+            downloadLink.download = 'corrected-image.jpg';
+
+            // Append to the document, trigger click and remove
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -81,9 +119,20 @@
         <button type="submit">Correct Image</button>
     </form>
 
+    <div class="debug-info" th:if="${debug}" th:text="${debug}"></div>
+    <div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <div class="original-image" th:if="${originalBase64Image}">
+        <h2>Original Image:</h2>
+        <img id="originalImg" th:src="${originalBase64Image}" alt="Original Image"/>
+    </div>
+
     <div class="corrected-image" th:if="${correctedImage}">
         <h2>Corrected Image:</h2>
-        <img th:src="'data:image/jpeg;base64,' + ${correctedImage}"  alt=""/>
+        <img id="correctedImg" th:src="${correctedImage}" alt="Corrected Image"/>
+        <div class="image-actions">
+            <button class="download-btn" onclick="downloadImage()">Download Image</button>
+        </div>
     </div>
 </div>
 </body>
