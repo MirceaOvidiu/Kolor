@@ -1,5 +1,8 @@
 package com.example.kolor_spring.Controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Controller;
@@ -17,11 +20,12 @@ import java.io.IOException;
 import java.util.Base64;
 
 @Controller
-public class indexController {
+public class IndexController {
 
     private final WebClient webClient;
+    private static final Logger myLogger = LoggerFactory.getLogger(IndexController.class);
 
-    public indexController(WebClient.Builder webClientBuilder) {
+    public IndexController(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs()
@@ -88,11 +92,11 @@ public class indexController {
                 model.addAttribute("errorMessage", "Failed to retrieve corrected image from API or empty response.");
             }
         } catch (IOException e) {
+            myLogger.error("Failed to process the image file: {}", e.getMessage(), e);
             model.addAttribute("errorMessage", "Failed to process the image file: " + e.getMessage());
-            e.printStackTrace();
         } catch (Exception e) {
+            myLogger.error("An unexpected error occurred: {}", e.getMessage(), e);
             model.addAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return "index";
