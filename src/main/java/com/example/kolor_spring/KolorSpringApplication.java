@@ -9,5 +9,4 @@ public class KolorSpringApplication {
     public static void main(String[] args) {
         SpringApplication.run(KolorSpringApplication.class, args);
     }
-
 }
