@@ -1,0 +1,24 @@
+services:
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - python-service
+    networks:
+      - app-network
+
+  python-service:
+    build:
+      context: ./python-service
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

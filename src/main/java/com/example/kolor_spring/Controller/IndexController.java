@@ -70,9 +70,12 @@ public class IndexController {
             System.out.println("Sending request to Flask API with LUT: " + lut);
             System.out.println("Original image size: " + image.getSize() + " bytes");
 
+            final String dockerAPIUrl = "http://python-service:5000";
+            final String localAPIUrl = "http://127.0.0.1:5000";
+
             // Make request to Flask API
             byte[] imageBytes = webClient.post()
-                    .uri("http://127.0.0.1:5000/correctAPI")
+                    .uri(localAPIUrl + "/correctAPI")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                     .retrieve()
