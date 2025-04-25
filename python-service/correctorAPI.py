@@ -1,22 +1,24 @@
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
-import seaborn as sns
 from PIL import Image
 from pillow_lut import load_cube_file
 from flask import Flask, request, jsonify, send_file
 from bytesbufio import BytesBufferIO as BytesIO
+import logging
+import os
 
 app = Flask(__name__)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 LUT_PATHS = {
-    r"LUTs\Canon C-Log2 to Rec.709 LUT 33x33.cube": r"LUTs\Canon C-Log2 to Rec.709 LUT 33x33.cube",
-    r"LUTs\Canon C-Log3 to Rec.709 LUT 33x33.cube": r"LUTs\Canon C-Log3 to Rec.709 LUT 33x33.cube",
-    r"LUTs\DJI D-Log to Rec.709 LUT 33x33.cube": r"LUTs\DJI D-Log to Rec.709 LUT 33x33.cube",
-    r"LUTs\Fujifilm F-Log to Rec.709 LUT 33x33.cube": r"LUTs\Fujifilm F-Log to Rec.709 LUT 33x33.cube",
-    r"LUTs\Nikon N-Log to Rec.709 LUT 33x33.cube": r"LUTs\Nikon N-Log to Rec.709 LUT 33x33.cube",
-    r"LUTs\Sony S-Log2 to Rec.709 LUT 33x33.cube": r"LUTs\Sony S-Log2 to Rec.709 LUT 33x33.cube",
-    r"LUTs\Sony S-Log3 to Rec.709 LUT 33x33.cube": r"LUTs\Sony S-Log3 to Rec.709 LUT 33x33.cube"
+    "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube"),
+    "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube"),
+    "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube"),
+    "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
+    "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube"),
+    "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube"),
+    "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube")
 }
 
 def generate_scaling_factors(image):
@@ -80,6 +82,10 @@ def color_correction(image):
     return corrected_image
 
 def apply_lut(image_path, lut_path):
+    if not os.path.exists(lut_path):
+        logging("Incorrect LUT path")
+        raise FileNotFoundError(f"LUT file not found: {lut_path}")
+    
     lut = load_cube_file(lut_path)
     im = Image.open(image_path)
     
@@ -103,6 +109,7 @@ def color_correct_image():
         try:
             image_np = apply_lut(file, LUT_PATHS.get(lut_name))
             if image_np is None:
+                logging("Failed to apply LUT")
                 return jsonify({"error": "Failed to apply LUT."}), 500
 
             corrected_image = color_correction(image_np)
@@ -114,6 +121,7 @@ def color_correct_image():
             return send_file(img_io, mimetype='image/png')
 
         except Exception as e:
+            logging("Failed to process image")
             return jsonify({'error': f'Error processing image: {e}'}), 500
 
     return jsonify({'error': 'No file uploaded'}), 400
