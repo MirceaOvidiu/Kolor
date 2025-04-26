@@ -11,26 +11,15 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# LUT_PATHS = {
-#     "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Canon C-Log2 to Rec.709 LUT 33x33.cube"),
-#     "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Canon C-Log3 to Rec.709 LUT 33x33.cube"),
-#     "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "DJI D-Log to Rec.709 LUT 33x33.cube"),
-#     "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
-#     "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Nikon N-Log to Rec.709 LUT 33x33.cube"),
-#     "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Sony S-Log2 to Rec.709 LUT 33x33.cube"),
-#     "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Sony S-Log3 to Rec.709 LUT 33x33.cube")
-# }
-
 LUT_PATHS = {
-    "C-Log2": os.path.join(BASE_DIR, "Canon C-Log2 to Rec.709 LUT 33x33.cube"),
-    "C-Log3": os.path.join(BASE_DIR, "Canon C-Log3 to Rec.709 LUT 33x33.cube"),
-    "D-Log": os.path.join(BASE_DIR, "DJI D-Log to Rec.709 LUT 33x33.cube"),
-    "F-Log": os.path.join(BASE_DIR, "Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
-    "N-Log": os.path.join(BASE_DIR, "Nikon N-Log to Rec.709 LUT 33x33.cube"),
-    "S-Log2": os.path.join(BASE_DIR, "Sony S-Log2 to Rec.709 LUT 33x33.cube"),
-    "S-Log3": os.path.join(BASE_DIR, "Sony S-Log3 to Rec.709 LUT 33x33.cube")
+    "C-Log2": os.path.join(BASE_DIR, "LUTs", "Canon C-Log2 to Rec.709 LUT 33x33.cube"),
+    "C-Log3": os.path.join(BASE_DIR, "LUTs", "Canon C-Log3 to Rec.709 LUT 33x33.cube"),
+    "D-Log": os.path.join(BASE_DIR, "LUTs", "DJI D-Log to Rec.709 LUT 33x33.cube"),
+    "F-Log": os.path.join(BASE_DIR, "LUTs", "Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
+    "N-Log": os.path.join(BASE_DIR, "LUTs", "Nikon N-Log to Rec.709 LUT 33x33.cube"),
+    "S-Log2": os.path.join(BASE_DIR, "LUTs", "Sony S-Log2 to Rec.709 LUT 33x33.cube"),
+    "S-Log3": os.path.join(BASE_DIR, "LUTs", "Sony S-Log3 to Rec.709 LUT 33x33.cube")
 }
-
 def generate_scaling_factors(image):
     pixels = image.reshape((-1, 3)).astype(float)
 
