@@ -75,7 +75,7 @@ public class IndexController {
 
             // Make request to Flask API
             byte[] imageBytes = webClient.post()
-                    .uri(localAPIUrl + "/correctAPI")
+                    .uri(dockerAPIUrl + "/correctAPI")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                     .retrieve()

@@ -2,6 +2,8 @@
 FROM python:3.11-slim
 WORKDIR /python-service
 
+COPY LUTs /python-service/LUTs
+
 # because opencv is sPeCiAl
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \

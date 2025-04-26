@@ -11,14 +11,24 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# LUT_PATHS = {
+#     "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Canon C-Log2 to Rec.709 LUT 33x33.cube"),
+#     "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Canon C-Log3 to Rec.709 LUT 33x33.cube"),
+#     "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "DJI D-Log to Rec.709 LUT 33x33.cube"),
+#     "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
+#     "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Nikon N-Log to Rec.709 LUT 33x33.cube"),
+#     "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Sony S-Log2 to Rec.709 LUT 33x33.cube"),
+#     "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs", "Sony S-Log3 to Rec.709 LUT 33x33.cube")
+# }
+
 LUT_PATHS = {
-    "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Canon C-Log2 to Rec.709 LUT 33x33.cube"),
-    "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Canon C-Log3 to Rec.709 LUT 33x33.cube"),
-    "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/DJI D-Log to Rec.709 LUT 33x33.cube"),
-    "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
-    "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Nikon N-Log to Rec.709 LUT 33x33.cube"),
-    "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Sony S-Log2 to Rec.709 LUT 33x33.cube"),
-    "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube": os.path.join(BASE_DIR, "LUTs/Sony S-Log3 to Rec.709 LUT 33x33.cube")
+    "C-Log2": os.path.join(BASE_DIR, "Canon C-Log2 to Rec.709 LUT 33x33.cube"),
+    "C-Log3": os.path.join(BASE_DIR, "Canon C-Log3 to Rec.709 LUT 33x33.cube"),
+    "D-Log": os.path.join(BASE_DIR, "DJI D-Log to Rec.709 LUT 33x33.cube"),
+    "F-Log": os.path.join(BASE_DIR, "Fujifilm F-Log to Rec.709 LUT 33x33.cube"),
+    "N-Log": os.path.join(BASE_DIR, "Nikon N-Log to Rec.709 LUT 33x33.cube"),
+    "S-Log2": os.path.join(BASE_DIR, "Sony S-Log2 to Rec.709 LUT 33x33.cube"),
+    "S-Log3": os.path.join(BASE_DIR, "Sony S-Log3 to Rec.709 LUT 33x33.cube")
 }
 
 def generate_scaling_factors(image):
@@ -82,10 +92,6 @@ def color_correction(image):
     return corrected_image
 
 def apply_lut(image_path, lut_path):
-    if not os.path.exists(lut_path):
-        logging("Incorrect LUT path")
-        raise FileNotFoundError(f"LUT file not found: {lut_path}")
-    
     lut = load_cube_file(lut_path)
     im = Image.open(image_path)
     
@@ -107,11 +113,15 @@ def color_correct_image():
 
     if file:
         try:
+            lut_path = LUT_PATHS.get(lut_name)
+            if not lut_path:
+                logging("No LUT Found")
+            
             image_np = apply_lut(file, LUT_PATHS.get(lut_name))
             if image_np is None:
                 logging("Failed to apply LUT")
                 return jsonify({"error": "Failed to apply LUT."}), 500
-
+            
             corrected_image = color_correction(image_np)
             _, img_encoded = cv2.imencode('.png', corrected_image)
 
