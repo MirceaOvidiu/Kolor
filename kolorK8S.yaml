@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spring-app
-  labels:
-    app: spring-app
 spec:
   replicas: 1
   selector:
@@ -19,29 +17,23 @@ spec:
           image: ca07d0c6a921acr.azurecr.io/kolor-spring-app:latest
           ports:
             - containerPort: 8080
-      restartPolicy: Always
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: spring-app-service
 spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
   selector:
     app: spring-app
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: LoadBalancer
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-service
-  labels:
-    app: python-service
 spec:
   replicas: 1
   selector:
@@ -57,18 +49,14 @@ spec:
           image: ca07d0c6a921acr.azurecr.io/kolor-python-service:latest
           ports:
             - containerPort: 5000
-      restartPolicy: Always
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: python-service-service
 spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
   selector:
     app: python-service
-  ports:
-    - protocol: TCP
-      port: 5000
-      targetPort: 5000
-  type: ClusterIP

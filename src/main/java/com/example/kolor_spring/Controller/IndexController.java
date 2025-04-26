@@ -2,7 +2,6 @@ package com.example.kolor_spring.Controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Controller;
@@ -15,22 +14,28 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.http.MediaType;
-
+import io.netty.resolver.DefaultAddressResolverGroup;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import reactor.netty.http.client.HttpClient;
+import java.time.Duration;
 import java.io.IOException;
 import java.util.Base64;
 
 @Controller
 public class IndexController {
-
     private final WebClient webClient;
-    private static final Logger myLogger = LoggerFactory.getLogger(IndexController.class);
+    private final Logger myLogger = LoggerFactory.getLogger(IndexController.class);
 
     public IndexController(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs()
-                                .maxInMemorySize(16 * 1024 * 1024)) // 16MB
+                                .maxInMemorySize(16 * 1024 * 1024))
                         .build())
+                .baseUrl("http://python-service-service:5000")
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+                        .resolver(DefaultAddressResolverGroup.INSTANCE)
+                        .responseTimeout(Duration.ofSeconds(30))))
                 .build();
     }
 
@@ -75,7 +80,7 @@ public class IndexController {
 
             // Make request to Flask API
             byte[] imageBytes = webClient.post()
-                    .uri(dockerAPIUrl + "/correctAPI")
+                    .uri("/correctAPI")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                     .retrieve()

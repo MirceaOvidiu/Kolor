@@ -1,0 +1,56 @@
+2025-04-26T20:22:14.694922104Z 
+2025-04-26T20:22:14.694978804Z   .   ____          _            __ _ _
+2025-04-26T20:22:14.694984104Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2025-04-26T20:22:14.694987004Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2025-04-26T20:22:14.694990104Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2025-04-26T20:22:14.694992904Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+2025-04-26T20:22:14.694995804Z  =========|_|==============|___/=/_/_/_/
+2025-04-26T20:22:14.694998804Z 
+2025-04-26T20:22:14.695002004Z  :: Spring Boot ::                (v3.4.4)
+2025-04-26T20:22:14.695004704Z 
+2025-04-26T20:22:15.163942558Z 2025-04-26T20:22:15.152Z  INFO 1 --- [kolor_spring] [           main] c.e.kolor_spring.KolorSpringApplication  : Starting KolorSpringApplication v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/app.jar started by root in /)
+2025-04-26T20:22:15.171190729Z 2025-04-26T20:22:15.170Z  INFO 1 --- [kolor_spring] [           main] c.e.kolor_spring.KolorSpringApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-04-26T20:22:20.900405953Z 2025-04-26T20:22:20.899Z  INFO 1 --- [kolor_spring] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-04-26T20:22:20.939931510Z 2025-04-26T20:22:20.939Z  INFO 1 --- [kolor_spring] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-04-26T20:22:20.946372186Z 2025-04-26T20:22:20.940Z  INFO 1 --- [kolor_spring] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-04-26T20:22:21.342232647Z 2025-04-26T20:22:21.337Z  INFO 1 --- [kolor_spring] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-04-26T20:22:21.345646535Z 2025-04-26T20:22:21.345Z  INFO 1 --- [kolor_spring] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5789 ms
+2025-04-26T20:22:24.154011728Z 2025-04-26T20:22:24.153Z  INFO 1 --- [kolor_spring] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-04-26T20:22:26.137045320Z 2025-04-26T20:22:26.135Z  INFO 1 --- [kolor_spring] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-04-26T20:22:26.205303119Z 2025-04-26T20:22:26.195Z  INFO 1 --- [kolor_spring] [           main] c.e.kolor_spring.KolorSpringApplication  : Started KolorSpringApplication in 13.965 seconds (process running for 16.536)
+2025-04-26T20:23:22.299253003Z 2025-04-26T20:23:22.298Z  INFO 1 --- [kolor_spring] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-26T20:23:22.299467102Z 2025-04-26T20:23:22.299Z  INFO 1 --- [kolor_spring] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-04-26T20:23:22.307422778Z 2025-04-26T20:23:22.306Z  INFO 1 --- [kolor_spring] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2025-04-26T20:23:23.114734440Z Sending request to Flask API with LUT: C-Log2
+2025-04-26T20:23:23.114761840Z Original image size: 369809 bytes
+2025-04-26T20:23:31.252903157Z Response received from API. Bytes length: 2345327
+2025-04-26T20:23:32.736653214Z Sending request to Flask API with LUT: C-Log3
+2025-04-26T20:23:32.736676014Z Original image size: 369809 bytes
+2025-04-26T20:23:37.972304842Z Response received from API. Bytes length: 2430514
+2025-04-26T20:26:31.841851486Z 2025-04-26T20:26:31.825Z  WARN 1 --- [kolor_spring] [nio-8080-exec-9] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:26:31.851789055Z 2025-04-26T20:26:31.845Z  WARN 1 --- [kolor_spring] [nio-8080-exec-9] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:27:25.761820708Z 2025-04-26T20:27:25.759Z  WARN 1 --- [kolor_spring] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:27:25.765889997Z 2025-04-26T20:27:25.761Z  WARN 1 --- [kolor_spring] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:27:48.781971447Z Sending request to Flask API with LUT: C-Log2
+2025-04-26T20:27:48.782110746Z Original image size: 113088 bytes
+2025-04-26T20:27:52.110016233Z Response received from API. Bytes length: 1355992
+2025-04-26T20:28:10.779270199Z Sending request to Flask API with LUT: C-Log3
+2025-04-26T20:28:10.779291299Z Original image size: 113088 bytes
+2025-04-26T20:28:14.561113173Z Response received from API. Bytes length: 1321363
+2025-04-26T20:29:39.072921900Z Sending request to Flask API with LUT: S-Log2
+2025-04-26T20:29:39.072999700Z Original image size: 113088 bytes
+2025-04-26T20:29:42.034326090Z Response received from API. Bytes length: 1288999
+2025-04-26T20:29:53.370803581Z Sending request to Flask API with LUT: C-Log2
+2025-04-26T20:29:53.370847881Z Original image size: 183451 bytes
+2025-04-26T20:29:57.387443487Z Response received from API. Bytes length: 688567
+2025-04-26T20:31:03.008679678Z 2025-04-26T20:31:03.008Z  WARN 1 --- [kolor_spring] [nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:03.009683675Z 2025-04-26T20:31:03.009Z  WARN 1 --- [kolor_spring] [nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:08.068694352Z 2025-04-26T20:31:08.068Z  WARN 1 --- [kolor_spring] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:08.069843949Z 2025-04-26T20:31:08.069Z  WARN 1 --- [kolor_spring] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:12.288197587Z 2025-04-26T20:31:12.287Z  WARN 1 --- [kolor_spring] [io-8080-exec-10] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:12.289265184Z 2025-04-26T20:31:12.289Z  WARN 1 --- [kolor_spring] [io-8080-exec-10] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:32.117080438Z 2025-04-26T20:31:32.116Z  WARN 1 --- [kolor_spring] [nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:31:32.118150336Z 2025-04-26T20:31:32.117Z  WARN 1 --- [kolor_spring] [nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded]
+2025-04-26T20:32:21.870794235Z Sending request to Flask API with LUT: C-Log2
+2025-04-26T20:32:21.870840835Z Original image size: 246882 bytes
+2025-04-26T20:32:25.446075110Z Response received from API. Bytes length: 1200729
