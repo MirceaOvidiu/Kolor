@@ -32,7 +32,7 @@ public class IndexController {
                         .codecs(configurer -> configurer.defaultCodecs()
                                 .maxInMemorySize(16 * 1024 * 1024))
                         .build())
-                .baseUrl("http://python-service-service:5000")
+                .baseUrl("http://python-service:5000")
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .resolver(DefaultAddressResolverGroup.INSTANCE)
                         .responseTimeout(Duration.ofSeconds(30))))
