@@ -15,32 +15,34 @@ spec:
         app: spring-app
     spec:
       containers:
-        - name: spring-app
+        - name: spring-app    
           image: ca07d0c6a921acr.azurecr.io/kolor-spring-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "2000m"
+            resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
             limits:
-              memory: "4Gi"
-              cpu: "4000m"
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 30
+              memory: "512Mi"
+              cpu: "500m"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          #   timeoutSeconds: 30
+          # readinessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          #   timeoutSeconds: 30
 ---
 apiVersion: v1
 kind: Service
@@ -75,25 +77,24 @@ spec:
             - containerPort: 5000
           resources:
             requests:
-              memory: "4Gi"
-              cpu: "4000m"
+              memory: "256Mi"
+              cpu: "250m"
             limits:
-              memory: "8Gi"
-              cpu: "6000m"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 5000
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 5000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 30
+              memory: "512Mi"
+              cpu: "500m"
+          #   httpGet:
+          #     path: /
+          #     port: 5000
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 60
+          #   timeoutSeconds: 60
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 5000
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          #   timeoutSeconds: 30
 ---
 apiVersion: v1
 kind: Service
