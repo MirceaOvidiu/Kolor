@@ -15,7 +15,7 @@ spec:
         app: spring-app
     spec:
       containers:
-        - name: spring-app    # Remove the duplicate '-containers:' line
+        - name: spring-app
           image: ca07d0c6a921acr.azurecr.io/kolor-spring-app:latest
           imagePullPolicy: Always
           ports:
@@ -27,9 +27,6 @@ spec:
             limits:
               memory: "4Gi"
               cpu: "4000m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -82,7 +79,7 @@ spec:
               cpu: "4000m"
             limits:
               memory: "8Gi"
-              cpu: "6000mm"
+              cpu: "6000m"
           livenessProbe:
             httpGet:
               path: /health
