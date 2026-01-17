@@ -6,8 +6,15 @@ from flask import Flask, request, jsonify, send_file
 from bytesbufio import BytesBufferIO as BytesIO
 import logging
 import os
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+
+# Initialize Prometheus metrics
+metrics = PrometheusMetrics(app)
+
+# Add custom metrics
+metrics.info('app_info', 'Application info', version='1.0.0')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -126,4 +133,4 @@ def color_correct_image():
     return jsonify({'error': 'No file uploaded'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)

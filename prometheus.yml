@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Spring Boot Application
+  - job_name: 'spring-app'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['spring-app:8080']
+        labels:
+          application: 'kolor-spring'
+          environment: 'dev'
+
+  # Python Flask Service
+  - job_name: 'python-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['python-service:5000']
+        labels:
+          application: 'kolor-python'
+          environment: 'dev'
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
