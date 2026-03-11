@@ -1,6 +1,6 @@
 # Kolor - Image Delog and Color Correction Tool
 
-Kolor is a cloud-native application for professional image color correction and delogging deployed on Azure Kubernetes Service. This system allows users to upload camera log footage and automatically apply proper color correction for viewing in Rec.709 color space.
+Kolor is a cloud-native application for professional image color correction and delogging deployed on Google GKE. This system allows users to upload camera log footage and automatically apply proper color correction for viewing in Rec.709 color space.
 
 ## Architecture
 
@@ -33,12 +33,12 @@ Both services are containerized with Docker and deployed to AKS using Kubernetes
 - **Frontend**: Spring Boot with Thymeleaf templates
 - **Backend Processing**: Python Flask API with NumPy, OpenCV, and Pillow
 - **Containerization**: Docker
-- **Orchestration**: Kubernetes on Azure AKS
-- **CI/CD**: GitHub Actions workflow with Azure Container Registry
+- **Orchestration**: Kubernetes on Google Kubernetes Engine.
+- **CI/CD**: GitHub Actions workflow.
 
 ## Deployment
 
-The application is deployed as a Kubernetes cluster using the provided [`kolorK8S.yaml`](kolorK8S.yaml) manifest, which sets up:
+The application is deployed as a Kubernetes cluster using the provided [`kolor-manifest.yaml`](kolor-manifest.yaml) manifest, which sets up:
 - Deployments for both Spring and Python services
 - Service definitions with proper networking
 - Resource limits and health probes
