@@ -96,6 +96,10 @@ def apply_lut(image_path, lut_path):
     
     return corrected_image_np
     
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 @app.route('/correctAPI', methods=['POST'])
 def color_correct_image():
     if 'file' not in request.files or 'lut_name' not in request.form:

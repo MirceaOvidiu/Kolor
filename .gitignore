@@ -35,3 +35,6 @@ HELP.md/
 mvnw.cmd/
 .idea/
 .gitattributes/
+
+### Secrets
+.gcp-key.json

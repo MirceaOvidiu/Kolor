@@ -1,0 +1,115 @@
+name: Build & Deploy to GKE
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:   # allow manual trigger from GitHub UI
+
+env:
+  PROJECT_ID:   ${{ secrets.GCP_PROJECT_ID }}
+  REGION:       europe-west1
+  CLUSTER:      kolor-cluster
+  CLUSTER_ZONE: europe-west1-b
+  REGISTRY:     europe-west1-docker.pkg.dev
+  REPO:         kolor-repo
+
+jobs:
+  # ─────────────────────────────────────────────
+  # 1. Build & push Spring Boot image
+  # ─────────────────────────────────────────────
+  build-spring:
+    name: Build Spring App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build & push Spring Boot image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-spring-app:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-spring-app:latest \
+            .
+          docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-spring-app:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-spring-app:latest
+
+  # ─────────────────────────────────────────────
+  # 2. Build & push Python service image
+  # ─────────────────────────────────────────────
+  build-python:
+    name: Build Python Service
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build & push Python image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-python-service:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-python-service:latest \
+            ./python-service
+          docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-python-service:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-python-service:latest
+
+  # ─────────────────────────────────────────────
+  # 3. Deploy to GKE
+  # ─────────────────────────────────────────────
+  deploy:
+    name: Deploy to GKE
+    runs-on: ubuntu-latest
+    needs: [build-spring, build-python]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ env.CLUSTER }}
+          location:     ${{ env.CLUSTER_ZONE }}
+
+      - name: Deploy manifest
+        run: kubectl apply -f kolor-manifest.yaml
+
+      - name: Update Spring Boot image to this commit
+        run: |
+          kubectl set image deployment/spring-app \
+            spring-app=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-spring-app:${{ github.sha }}
+
+      - name: Update Python service image to this commit
+        run: |
+          kubectl set image deployment/python-service \
+            python-service=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPO }}/kolor-python-service:${{ github.sha }}
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/spring-app   --timeout=120s
+          kubectl rollout status deployment/python-service --timeout=120s
+
+      - name: Print external IP
+        run: kubectl get service spring-app-service
