@@ -5,6 +5,10 @@ on:
     branches: [master]
   workflow_dispatch:   # allow manual trigger from GitHub UI
 
+permissions:
+  contents: read
+  checks: write
+
 env:
   PROJECT_ID:   ${{ secrets.GCP_PROJECT_ID }}
   REGION:       europe-west1
