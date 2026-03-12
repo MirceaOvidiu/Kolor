@@ -39,3 +39,15 @@ mvnw.cmd/
 ### Secrets
 .gcp-key.json
 .cmds.txt
+cmds.txt
+
+### Python ###
+.venv/
+python-service/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+python-service/test-results.xml
+python-service/coverage.xml
