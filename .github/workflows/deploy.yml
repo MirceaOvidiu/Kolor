@@ -14,9 +14,89 @@ env:
   REPO:         kolor-repo
 
 jobs:
+  test-spring:
+    name: Test Spring Boot App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Spring Boot tests
+        run: |
+          chmod +x mvnw
+          ./mvnw clean test
+
+      - name: Generate test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Spring Boot Tests
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spring-test-results
+          path: target/surefire-reports/
+
+  test-python:
+    name: Test Python Service
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libglib2.0-0
+
+      - name: Install Python dependencies
+        working-directory: ./python-service
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir -r test-requirements.txt
+
+      - name: Run Python tests
+        working-directory: ./python-service
+        run: |
+          python -m pytest
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-test-results
+          path: python-service/test-results.xml
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-coverage
+          path: python-service/coverage.xml
+
   build-spring:
     name: Build Spring App
     runs-on: ubuntu-latest
+    needs: test-spring
 
     steps:
       - name: Checkout
@@ -45,6 +125,7 @@ jobs:
   build-python:
     name: Build Python Service
     runs-on: ubuntu-latest
+    needs: test-python
 
     steps:
       - name: Checkout

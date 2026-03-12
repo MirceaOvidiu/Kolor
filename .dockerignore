@@ -1,0 +1,10 @@
+.git
+.github
+target
+.vscode
+.idea
+*.iml
+README.md
+MONITORING.md
+cmds.txt
+python-service
