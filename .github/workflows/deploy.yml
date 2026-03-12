@@ -14,9 +14,6 @@ env:
   REPO:         kolor-repo
 
 jobs:
-  # ─────────────────────────────────────────────
-  # 1. Build & push Spring Boot image
-  # ─────────────────────────────────────────────
   build-spring:
     name: Build Spring App
     runs-on: ubuntu-latest
