@@ -9,6 +9,7 @@ import os
 from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+logger = logging.getLogger(__name__)
 
 # Initialize Prometheus metrics
 metrics = PrometheusMetrics(app)
@@ -32,6 +33,8 @@ def generate_scaling_factors(image):
 
     mean_vector = np.mean(pixels, axis=0)
     std_vector = np.std(pixels, axis=0)
+    # Avoid divide-by-zero for uniform channels.
+    std_vector = np.where(std_vector == 0, 1e-8, std_vector)
     standardized_pixels = (pixels - mean_vector) / std_vector
 
     covariance_matrix = np.cov(standardized_pixels, rowvar=False)
@@ -46,9 +49,10 @@ def generate_scaling_factors(image):
 
     transformed_pixels = standardized_pixels.dot(principal_components)
 
-    scaling_factors = np.std(transformed_pixels, axis=0) / np.mean(
-        np.abs(transformed_pixels), axis=0
-    )
+    denom = np.mean(np.abs(transformed_pixels), axis=0)
+    denom = np.where(denom == 0, 1e-8, denom)
+    scaling_factors = np.std(transformed_pixels, axis=0) / denom
+    scaling_factors = np.nan_to_num(scaling_factors, nan=1.0, posinf=1.0, neginf=1.0)
 
     return scaling_factors
 
@@ -60,6 +64,7 @@ def color_correction(image):
     mean_vector = np.mean(pixels, axis=0)
 
     std_vector = np.std(pixels, axis=0)
+    std_vector = np.where(std_vector == 0, 1e-8, std_vector)
 
     standardized_pixels = (pixels - mean_vector) / std_vector
 
@@ -71,7 +76,7 @@ def color_correction(image):
     eigenvalues = eigenvalues[idx]
     eigenvectors = eigenvectors[:, idx]
     
-    principal_components = eigenvectors[:, :6]
+    principal_components = eigenvectors[:, :3]
 
     projected_pixels = np.dot(standardized_pixels, principal_components)
 
@@ -83,7 +88,8 @@ def color_correction(image):
 
     corrected_pixels = corrected_pixels * std_vector + mean_vector
 
-    corrected_image = np.array(corrected_pixels.reshape(image.shape))
+    corrected_pixels = np.nan_to_num(corrected_pixels, nan=0.0, posinf=255.0, neginf=0.0)
+    corrected_image = np.clip(corrected_pixels.reshape(image.shape), 0, 255).astype(np.uint8)
 
     return corrected_image
 
@@ -115,11 +121,11 @@ def color_correct_image():
         try:
             lut_path = LUT_PATHS.get(lut_name)
             if not lut_path:
-                logging("No LUT Found")
+                return jsonify({'error': 'Invalid LUT name'}), 400
             
-            image_np = apply_lut(file, LUT_PATHS.get(lut_name))
+            image_np = apply_lut(file, lut_path)
             if image_np is None:
-                logging("Failed to apply LUT")
+                logger.error("Failed to apply LUT")
                 return jsonify({"error": "Failed to apply LUT."}), 500
             
             corrected_image = color_correction(image_np)
@@ -131,7 +137,7 @@ def color_correct_image():
             return send_file(img_io, mimetype='image/png')
 
         except Exception as e:
-            logging("Failed to process image")
+            logger.exception("Failed to process image")
             return jsonify({'error': f'Error processing image: {e}'}), 500
 
     return jsonify({'error': 'No file uploaded'}), 400
