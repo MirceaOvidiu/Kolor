@@ -5,7 +5,12 @@ metadata:
   annotations:
     fluentbit.io/parser: java
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: spring-app
@@ -23,10 +28,10 @@ spec:
           resources:
             requests:
               memory: "512Mi"
-              cpu: "500m"
+              cpu: "250m"
             limits:
               memory: "1024Mi"
-              cpu: "1000m"
+              cpu: "750m"
           livenessProbe:
             httpGet:
               path: /actuator/health
@@ -59,7 +64,12 @@ kind: Deployment
 metadata:
   name: python-service
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: python-service
@@ -77,10 +87,10 @@ spec:
           resources:
             requests:
               memory: "512Mi"
-              cpu: "500m"
+              cpu: "250m"
             limits:
               memory: "1024Mi"
-              cpu: "1000m"
+              cpu: "750m"
           livenessProbe:
             httpGet:
               path: /health
