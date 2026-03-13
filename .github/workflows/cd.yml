@@ -190,27 +190,8 @@ jobs:
 
       - name: Wait for rollout
         run: |
-          kubectl rollout status deployment/spring-app --timeout=300s || {
-            echo "Spring rollout timed out. Collecting diagnostics..."
-            kubectl get deployment spring-app -o wide
-            kubectl describe deployment spring-app
-            kubectl get pods -l app=spring-app -o wide
-            kubectl describe pods -l app=spring-app
-            kubectl logs -l app=spring-app --all-containers --tail=200 || true
-            kubectl get events --sort-by=.metadata.creationTimestamp | tail -n 50 || true
-            exit 1
-          }
-
-          kubectl rollout status deployment/python-service --timeout=300s || {
-            echo "Python rollout timed out. Collecting diagnostics..."
-            kubectl get deployment python-service -o wide
-            kubectl describe deployment python-service
-            kubectl get pods -l app=python-service -o wide
-            kubectl describe pods -l app=python-service
-            kubectl logs -l app=python-service --all-containers --tail=200 || true
-            kubectl get events --sort-by=.metadata.creationTimestamp | tail -n 50 || true
-            exit 1
-          }
+          kubectl rollout status deployment/spring-app --timeout=300s
+          kubectl rollout status deployment/python-service --timeout=300s
 
       - name: Print external IP
         run: kubectl get service spring-app-service
