@@ -13,13 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.http.MediaType;
 import io.netty.resolver.DefaultAddressResolverGroup;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import reactor.netty.http.client.HttpClient;
 import java.time.Duration;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Objects;
 
 @Controller
 public class IndexController {
@@ -27,15 +27,17 @@ public class IndexController {
     private final Logger myLogger = LoggerFactory.getLogger(IndexController.class);
 
     public IndexController(WebClient.Builder webClientBuilder) {
+        HttpClient configuredHttpClient = HttpClient.create()
+            .resolver(DefaultAddressResolverGroup.INSTANCE)
+            .responseTimeout(Duration.ofSeconds(30));
+
         this.webClient = webClientBuilder
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs()
                                 .maxInMemorySize(16 * 1024 * 1024))
                         .build())
                 .baseUrl("http://python-service:5000")
-                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
-                        .resolver(DefaultAddressResolverGroup.INSTANCE)
-                        .responseTimeout(Duration.ofSeconds(30))))
+                .clientConnector(new ReactorClientHttpConnector(Objects.requireNonNull(configuredHttpClient)))
                 .build();
     }
 
@@ -54,6 +56,7 @@ public class IndexController {
                                @RequestParam("lut_name") String lut,
                                Model model) {
         try {
+            String nonNullLut = Objects.requireNonNull(lut, "lut_name must not be null");
             String originalBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(image.getBytes());
             model.addAttribute("originalBase64Image", originalBase64Image);
 
@@ -69,16 +72,15 @@ public class IndexController {
             });
 
             // Add the LUT name
-            bodyBuilder.part("lut_name", lut);
+            bodyBuilder.part("lut_name", nonNullLut);
 
             // Debug info
-            System.out.println("Sending request to Flask API with LUT: " + lut);
+            System.out.println("Sending request to Flask API with LUT: " + nonNullLut);
             System.out.println("Original image size: " + image.getSize() + " bytes");
 
             // Make request to Flask API
             byte[] imageBytes = webClient.post()
                     .uri("/correctAPI")
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                     .retrieve()
                     .bodyToMono(byte[].class)
